@@ -1,12 +1,23 @@
 package cats
 package arrow
 
+import simulacrum.typeclass
+
 /**
- * Must obey the laws defined in cats.laws.ComposeLaws.
+ * Compose represents a high level abstraction for the compose operations for arrows.
  */
-trait Compose[F[_, _]] extends Serializable { self =>
+@typeclass trait Compose[F[_, _]] extends Serializable { self =>
+  
+  /** 
+    * composes a `F[B, C]` with a `F[A, B]` to form a `F[A, C]`
+    */
+  @simulacrum.op("<<<", alias=true)
   def compose[A, B, C](f: F[B, C], g: F[A, B]): F[A, C]
 
+  /**
+    * composes a `F[A, B]` with a `F[B, C]` to form a `F[A, C]` 
+    */
+  @simulacrum.op(">>>", alias=true)
   def andThen[A, B, C](f: F[A, B], g: F[B, C]): F[A, C] =
     compose(g, f)
 
@@ -21,6 +32,4 @@ trait Compose[F[_, _]] extends Serializable { self =>
     }
 }
 
-object Compose {
-  def apply[F[_, _]](implicit ev: Compose[F]): Compose[F] = ev
-}
+

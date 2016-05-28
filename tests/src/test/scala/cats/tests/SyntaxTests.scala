@@ -3,6 +3,7 @@ package tests
 
 import cats.std.AllInstances
 import cats.syntax.AllSyntax
+import cats.arrow.{Compose}
 import cats.functor.{Invariant, Contravariant}
 
 /**
@@ -253,5 +254,12 @@ class SyntaxTests extends AllInstances with AllSyntax {
 
     val pfegea = mock[PartialFunction[E, G[A]]]
     val gea4 = ga.recoverWith(pfegea)
+  }
+
+  def testCompose[F[_, _]: Compose, A, B, C, D]: Unit = {
+    val fab = mock[F[A, B]]
+    val fbc = mock[F[B, C]]
+    val fac1 = fab >>> fbc
+    val fac2 = fbc <<< fab
   }
 }

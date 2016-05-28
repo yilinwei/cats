@@ -1,10 +1,14 @@
 package cats
 package arrow
 
-trait Split[F[_, _]] extends Compose[F] { self =>
-  def split[A, B, C, D](f: F[A, B], g: F[C, D]): F[(A,  C), (B, D)]
-}
+import simulacrum.typeclass
 
-object Split {
-  def apply[F[_, _]](implicit ev: Split[F]): Split[F] = ev
+@typeclass trait Split[F[_, _]] extends Compose[F] { self =>
+
+  /**
+    * split the argument `(A, C)` between two arrows which take in `A` and `C` and combine the output.
+    */
+  @simulacrum.op("***", alias=true)
+  def split[A, B, C, D](f: F[A, B], g: F[C, D]): F[(A,  C), (B, D)]
+  
 }
